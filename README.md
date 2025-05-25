@@ -14,4 +14,10 @@ The app runs entirely through a Python terminal interface and is built using the
 
  Edit or remove habits
 
+## Group members 
+1. yeabsira teshome 
+2. Tsegazeab eskinder 
+3. Nebiuo Yonas
+4. migbar worku
+5. Beimnet Getnet
 
