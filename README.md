@@ -39,9 +39,9 @@ This feature gives that flexibility:
  - Or completely delete it and its data
 
 ## Group members 
-1. yeabsira teshome 
-2. Tsegazeab eskinder 
+1. Yeabsira Teshome 
+2. Tsegazeab Eskinder 
 3. Nebiuo Yonas
-4. megebar worku
+4. Megebar Worku
 5. Beimnet Getnet
 
