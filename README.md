@@ -42,6 +42,6 @@ This feature gives that flexibility:
 1. Yeabsira Teshome 
 2. Tsegazeab Eskinder 
 3. Nebiuo Yonas
-4. Megebar Worku
+4. Megebar Wugtft
 5. Beimnet Getnet
 
