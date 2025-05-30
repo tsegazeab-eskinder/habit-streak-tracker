@@ -1,16 +1,31 @@
 from datetime import datetime
+import json
+import os
 
-habits = []
+DATA_FILE = "habit_data.json"
+
+def load_habits():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r") as f:
+            return json.load(f)
+    return []
+
+def save_habits():
+    with open(DATA_FILE, "w") as f:
+        json.dump(habits, f, indent=4)
+
+habits = load_habits()
 
 def add_habit():
     name = input("Enter habit name (e.g., 'Read 30 mins'): ")
     habits.append({
         "name": name,
-        "created_at": datetime.now().strftime("%Y-%m-%d"),
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "streak": 0,
         "log": []
     })
     print(f"Added habit: '{name}'")
+    save_habits()
 
 def mark_habit_completed():
     if not habits:
@@ -33,11 +48,51 @@ def mark_habit_completed():
                 selected["log"].append(today)
                 selected["streak"] += 1
                 print(f"'{selected['name']}' marked as completed. Current streak: {selected['streak']}")
+                save_habits()
         else:
             print("Invalid habit number.")
     except ValueError:
         print("Please enter a number.")
 
+def edit_or_remove_habit():
+    if not habits:
+        print("No habits found.")
+        return
+
+    print("\nYour habits:")
+    for idx, habit in enumerate(habits, 1):
+        print(f"{idx}. {habit['name']} (Streak: {habit['streak']})")
+
+    try:
+        choice = int(input("Enter the number of the habit you want to edit or remove: "))
+        if 1 <= choice <= len(habits):
+            selected = habits[choice - 1]
+            print(f"Selected: {selected['name']}")
+            print("1. Rename habit")
+            print("2. Delete habit")
+            action = input("Choose an option (1 or 2): ")
+
+            if action == "1":
+                new_name = input("Enter the new name for the habit: ")
+                selected["name"] = new_name
+                print(f"Habit renamed to '{new_name}'")
+                save_habits()
+            elif action == "2":
+                confirm = input(f"Are you sure you want to delete '{selected['name']}'? (y/n): ")
+                if confirm.lower() == "y":
+                    habits.pop(choice - 1)
+                    print("Habit deleted.")
+                    save_habits()
+                else:
+                    print("Deletion cancelled.")
+            else:
+                print("Invalid option.")
+        else:
+            print("Invalid habit number.")
+    except ValueError:
+        print("Please enter a valid number.")
+
 if __name__ == "__main__":
     add_habit()
     mark_habit_completed()
+    edit_or_remove_habit()
