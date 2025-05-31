@@ -100,15 +100,15 @@ def view_history(habit_name, days=7):
     start_date = today - timedelta(days=days)
     completed_days = [date for date in habit["log"] if datetime.strptime(date, "%Y-%m-%d") >= start_date]
 
-    print(f"\n📅 Habit history for '{habit_name}' in the last {days} days:")
-    print("✔️ Completed Days:", ", ".join(completed_days) if completed_days else "None")
+    print(f"\nHabit history for '{habit_name}' in the last {days} days:")
+    print("Completed Days:", ", ".join(completed_days) if completed_days else "None")
 
     missed_days = [
         str((start_date + timedelta(days=i)).date()) 
         for i in range(days) 
         if str((start_date + timedelta(days=i)).date()) not in completed_days
     ]
-    print("❌ Missed Days:", ", ".join(missed_days) if missed_days else "None")
+    print("Missed Days:", ", ".join(missed_days) if missed_days else "None")
 if __name__ == "__main__":
     add_habit()
     mark_habit_completed()
