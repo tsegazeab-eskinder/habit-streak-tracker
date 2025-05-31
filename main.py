@@ -4,19 +4,16 @@ import os
 
 DATA_FILE = "habit_data.json"
 
-# Load saved habits from the file
 def load_habits():
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r") as f:
             return json.load(f)
     return []
 
-# Save current habits to the file
 def save_habits():
     with open(DATA_FILE, "w") as f:
         json.dump(habits, f, indent=4)
 
-# Show all habits and their current streaks
 def show_all_streaks():
     if not habits:
         print("No habits found.")
@@ -26,7 +23,6 @@ def show_all_streaks():
     for idx, habit in enumerate(habits, 1):
         print(f"{idx}. {habit['name']} - Streak: {habit['streak']}")
 
-# Add a new habit
 def add_habit():
     name = input("Enter habit name (e.g., 'Read 30 mins'): ").strip()
     
@@ -43,7 +39,6 @@ def add_habit():
     print(f"Added habit: '{name}'")
     save_habits()
 
-# Mark a habit as completed for today
 def mark_habit_completed():
     if not habits:
         print("No habits found.")
@@ -80,7 +75,6 @@ def mark_habit_completed():
     except ValueError:
         print("Please enter a valid number.")
 
-# Edit or delete a habit
 def edit_or_remove_habit():
     if not habits:
         print("No habits found.")
@@ -119,7 +113,6 @@ def edit_or_remove_habit():
     except ValueError:
         print("Please enter a valid number.")
 
-# View habit completion history over the last X days
 def view_history(habit_name, days=7):
     habit = next((h for h in habits if h["name"].lower() == habit_name.lower()), None)
     if not habit:
@@ -140,10 +133,8 @@ def view_history(habit_name, days=7):
     ]
     print(" Missed Days:", ", ".join(missed_days) if missed_days else "None")
 
-# Load saved habits into memory
 habits = load_habits()
 
-# CLI Menu
 if __name__ == "__main__":
     while True:
         print("\nHabit Tracker Menu:")
