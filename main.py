@@ -45,8 +45,19 @@ def mark_habit_completed():
             if selected["log"] and selected["log"][-1] == today:
                 print("You've already marked this habit as completed today.")
             else:
+                # Check if yesterday was completed to maintain streak, else reset
+                if selected["log"]:
+                    last_date = datetime.strptime(selected["log"][-1], "%Y-%m-%d")
+                    yesterday = datetime.now() - timedelta(days=1)
+                    if last_date.date() == yesterday.date():
+                        selected["streak"] += 1
+                    elif last_date.date() == datetime.now().date():
+                        pass  # Already marked today
+                    else:
+                        selected["streak"] = 1
+                else:
+                    selected["streak"] = 1
                 selected["log"].append(today)
-                selected["streak"] += 1
                 print(f"'{selected['name']}' marked as completed. Current streak: {selected['streak']}")
                 save_habits()
         else:
@@ -91,6 +102,7 @@ def edit_or_remove_habit():
             print("Invalid habit number.")
     except ValueError:
         print("Please enter a valid number.")
+
 def view_history(habit_name, days=7):
     habit = next((h for h in habits if h["name"] == habit_name), None)
     if not habit:
@@ -109,9 +121,38 @@ def view_history(habit_name, days=7):
         if str((start_date + timedelta(days=i)).date()) not in completed_days
     ]
     print("Missed Days:", ", ".join(missed_days) if missed_days else "None")
+
+def show_all_streaks():
+    if not habits:
+        print("No habits found.")
+        return
+    print("\nYour Habits and Streaks:")
+    for habit in habits:
+        print(f"- {habit['name']}: Streak {habit['streak']} (Created: {habit['created_at']})")
+
 if __name__ == "__main__":
-    add_habit()
-    mark_habit_completed()
-    edit_or_remove_habit()
-    habit_name = input("Enter the habit name to view history: ")
-    view_history(habit_name,days=7)
+    while True:
+        print("\nHabit Tracker Menu:")
+        print("1. Show all habits and streaks")
+        print("2. Add new habit")
+        print("3. Mark habit as completed")
+        print("4. Edit or remove habit")
+        print("5. View habit history")
+        print("6. Exit")
+        choice = input("Choose an option (1-6): ")
+        if choice == "1":
+            show_all_streaks()
+        elif choice == "2":
+            add_habit()
+        elif choice == "3":
+            mark_habit_completed()
+        elif choice == "4":
+            edit_or_remove_habit()
+        elif choice == "5":
+            habit_name = input("Enter the habit name to view history: ")
+            view_history(habit_name, days=7)
+        elif choice == "6":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid option. Please try again.")
