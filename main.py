@@ -48,32 +48,35 @@ def mark_habit_completed():
     for idx, habit in enumerate(habits, 1):
         print(f"{idx}. {habit['name']} (Streak: {habit['streak']})")
 
-    try:
-        choice = int(input("Enter the number of the habit you completed today: "))
-        if 1 <= choice <= len(habits):
-            selected = habits[choice - 1]
-            today = datetime.now().strftime("%Y-%m-%d")
+    choice = input("Enter the number of the habit you completed today: ").strip()
 
-            if selected["log"] and selected["log"][-1] == today:
-                print("You've already marked this habit as completed today.")
-            else:
-                if selected["log"]:
-                    last_date = datetime.strptime(selected["log"][-1], "%Y-%m-%d")
-                    yesterday = datetime.now() - timedelta(days=1)
-                    if last_date.date() == yesterday.date():
-                        selected["streak"] += 1
-                    else:
-                        selected["streak"] = 1
+    if not choice.isdigit():
+        print("Please enter a valid number.")
+        return
+
+    choice = int(choice)
+    if 1 <= choice <= len(habits):
+        selected = habits[choice - 1]
+        today = datetime.now().strftime("%Y-%m-%d")
+
+        if selected["log"] and selected["log"][-1] == today:
+            print("You've already marked this habit as completed today.")
+        else:
+            if selected["log"]:
+                last_date = datetime.strptime(selected["log"][-1], "%Y-%m-%d")
+                yesterday = datetime.now() - timedelta(days=1)
+                if last_date.date() == yesterday.date():
+                    selected["streak"] += 1
                 else:
                     selected["streak"] = 1
+            else:
+                selected["streak"] = 1
 
-                selected["log"].append(today)
-                print(f"'{selected['name']}' marked as completed. Current streak: {selected['streak']}")
-                save_habits()
-        else:
-            print("Invalid habit number.")
-    except ValueError:
-        print("Please enter a valid number.")
+            selected["log"].append(today)
+            print(f"'{selected['name']}' marked as completed. Current streak: {selected['streak']}")
+            save_habits()
+    else:
+        print("Invalid habit number.")
 
 def edit_or_remove_habit():
     if not habits:
@@ -84,34 +87,37 @@ def edit_or_remove_habit():
     for idx, habit in enumerate(habits, 1):
         print(f"{idx}. {habit['name']} (Streak: {habit['streak']})")
 
-    try:
-        choice = int(input("Enter the number of the habit you want to edit or remove: "))
-        if 1 <= choice <= len(habits):
-            selected = habits[choice - 1]
-            print(f"Selected: {selected['name']}")
-            print("1. Rename habit")
-            print("2. Delete habit")
-            action = input("Choose an option (1 or 2): ")
+    choice = input("Enter the number of the habit you want to edit or remove: ").strip()
 
-            if action == "1":
-                new_name = input("Enter the new name for the habit: ").strip()
-                selected["name"] = new_name
-                print(f"Habit renamed to '{new_name}'")
-                save_habits()
-            elif action == "2":
-                confirm = input(f"Are you sure you want to delete '{selected['name']}'? (y/n): ")
-                if confirm.lower() == "y":
-                    habits.pop(choice - 1)
-                    print("Habit deleted.")
-                    save_habits()
-                else:
-                    print("Deletion cancelled.")
-            else:
-                print("Invalid option.")
-        else:
-            print("Invalid habit number.")
-    except ValueError:
+    if not choice.isdigit():
         print("Please enter a valid number.")
+        return
+
+    choice = int(choice)
+    if 1 <= choice <= len(habits):
+        selected = habits[choice - 1]
+        print(f"Selected: {selected['name']}")
+        print("1. Rename habit")
+        print("2. Delete habit")
+        action = input("Choose an option (1 or 2): ").strip()
+
+        if action == "1":
+            new_name = input("Enter the new name for the habit: ").strip()
+            selected["name"] = new_name
+            print(f"Habit renamed to '{new_name}'")
+            save_habits()
+        elif action == "2":
+            confirm = input(f"Are you sure you want to delete '{selected['name']}'? (y/n): ").strip()
+            if confirm.lower() == "y":
+                habits.pop(choice - 1)
+                print("Habit deleted.")
+                save_habits()
+            else:
+                print("Deletion cancelled.")
+        else:
+            print("Invalid option.")
+    else:
+        print("Invalid habit number.")
 
 def view_history(habit_name, days=7):
     habit = next((h for h in habits if h["name"].lower() == habit_name.lower()), None)
